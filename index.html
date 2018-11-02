@@ -44,7 +44,7 @@
 				  //var token = result.credential.accessToken;
 				  // The signed-in user info.
 				  //var user = result.user;
-				  localStorage.setItem("email", user.email);
+				  localStorage.setItem("email", result.user.email);
 				  // ...
 				}).catch(function(error) {
 					alert(error);
