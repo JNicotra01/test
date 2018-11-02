@@ -340,19 +340,9 @@ if (true) {
 			1, 1, 1, 1, 1
 		]
 	};*/
-	 var json = (function () {
-		var json = null;
-		$.ajax({
-			'async': false,
-			'global': false,
-			'url': "data/students.json",
-			'dataType': "json",
-			'success': function (data) {
-				json = data;
-			}
-		});
-		return json;
-	})();
+	$.getJSON( "data/students.json", function( data ) {
+	  alert(data)
+	});
 	alert(json);
 	//alert(JSON.stringify(students));
 } else {
