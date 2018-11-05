@@ -28,34 +28,24 @@
 			db.settings({
 			  timestampsInSnapshots: true
 			});
-			db.collection("students").get().then((querySnapshot) => {
-				var data = {};
-				querySnapshot.forEach((doc) => {
-					data[doc.id] = doc.data();
+			let lastUpdated = localStorage.getItem("lastUpdated");
+			let time = (lastUpdated == null) ? Date.now() : lastUpdated;
+			db.collection("students").where("timestamp", ">", time).get().then(function(querySnapshot) {
+				let studentData = localStorage.getItem("students");
+				var data = (studentData == null) ? {} : JSON.parse(studentData);
+				querySnapshot.forEach(function(doc) {
+					let obj = doc.data();
+					delete obj.timestamp;
+					data[doc.id] = obj["data"];
 				});
 				localStorage.setItem("students", JSON.stringify(data));
+				localStorage.setItem("lastUpdated", Date.now());
 			});
-			// Retrieve
-			localStorage.getItem("students");
-			if (localStorage.getItem("email") !== null) {
+			alert(localStorage.getItem("students"));
+			if (localStorage.getItem("email") === null) {
 				var provider = new firebase.auth.GoogleAuthProvider();
 				firebase.auth().signInWithPopup(provider).then(function(result) {
-				  // This gives you a Google Access Token. You can use it to access the Google API.
-				  //var token = result.credential.accessToken;
-				  // The signed-in user info.
-				  //var user = result.user;
 				  localStorage.setItem("email", result.user.email);
-				  // ...
-				}).catch(function(error) {
-					alert(error);
-				  // Handle Errors here.
-				  var errorCode = error.code;
-				  var errorMessage = error.message;
-				  // The email of the user's account used.
-				  var email = error.email;
-				  // The firebase.auth.AuthCredential type that was used.
-				  var credential = error.credential;
-				  // ...
 				});
 			}
 			alert(localStorage.getItem("email"));
